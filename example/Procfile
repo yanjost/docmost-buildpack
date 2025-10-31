@@ -1,0 +1,2 @@
+web: bash -c 'if [[ -f .docmost_web_cmd ]]; then exec $(cat .docmost_web_cmd); else exec node apps/server/dist/main.js; fi'
+postdeploy: ./scripts/run_migrations.sh

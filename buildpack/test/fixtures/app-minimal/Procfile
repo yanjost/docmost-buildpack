@@ -1,0 +1,2 @@
+web: node apps/server/dist/main.js
+postdeploy: pnpm nx run server:migration:latest

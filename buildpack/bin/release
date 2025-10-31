@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -e
+source "$(dirname "$0")/../lib/common.sh"
+
+WEB_CMD="$(cat "$BUILD_DIR/.docmost_web_cmd" 2>/dev/null || echo 'node apps/server/dist/main.js')"
+
+cat <<EOF
+{
+  "default_process_types": {
+    "web": "$WEB_CMD"
+  }
+}
+EOF

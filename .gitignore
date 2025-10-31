@@ -1,0 +1,14 @@
+# Node
+node_modules/
+
+# Buildpack
+/buildpack/.cache/
+/buildpack/.tmp/
+
+# Example app
+/example/node_modules/
+/example/.env
+
+# Misc
+*.log
+.DS_Store

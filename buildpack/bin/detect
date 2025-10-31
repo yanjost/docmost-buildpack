@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -e
+source "$(dirname "$0")/../lib/common.sh"
+
+if [[ -n "$DOCMOST_VERSION" ]]; then
+  echo ":: detect :: DOCMOST_VERSION set: $DOCMOST_VERSION"
+  exit 0
+fi
+
+if [[ -f "$BUILD_DIR/Procfile" ]]; then
+  echo ":: detect :: Procfile found, proceeding"
+  exit 0
+fi
+
+echo ":: detect :: DOCMOST_VERSION not set, defaulting to latest stable"
+exit 0

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -e
+source "$(dirname "$0")/../lib/common.sh"
+source "$(dirname "$0")/../lib/docmost_release.sh"
+source "$(dirname "$0")/../lib/config_render.sh"
+
+step "Resolving Docmost version"
+resolve_docmost_version
+
+step "Fetching Docmost release tarball"
+fetch_and_unpack_docmost
+
+step "Inferring entrypoint"
+infer_entrypoint
+
+step "Configuring storage"
+configure_storage
+
+step "Configuring database and cache URLs"
+configure_db_and_redis
+
+step "Writing profile.d/10-docmost.sh"
+write_profile_d
+
+step "Compile finished"

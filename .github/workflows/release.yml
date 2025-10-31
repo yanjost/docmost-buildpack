@@ -1,0 +1,18 @@
+name: Release
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create buildpack tarball
+        run: tar -czf docmost-buildpack.tar.gz buildpack/
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: docmost-buildpack
+          path: docmost-buildpack.tar.gz
