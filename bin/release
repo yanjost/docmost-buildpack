@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -e
+trap 'echo "[ERROR] $0 failed at line $LINENO: $BASH_COMMAND" >&2' ERR
 BUILD_DIR="$1"
-source "$(dirname "$0")/../lib/common.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../lib/common.sh"
 
 WEB_CMD="$(cat "$BUILD_DIR/.docmost_web_cmd" 2>/dev/null || echo 'node apps/server/dist/main.js')"
 

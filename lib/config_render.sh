@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-set -e
-source "../lib/common.sh"
+set -x
+trap 'echo "[ERROR] $0 failed at line $LINENO: $BASH_COMMAND" >&2' ERR
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/common.sh"
 
 configure_storage() {
   if [[ "$STORAGE_DRIVER" == "s3" ]]; then
@@ -24,6 +26,7 @@ configure_db_and_redis() {
   fi
   [[ -z "$DATABASE_URL" ]] && fail "Missing DATABASE_URL"
   [[ -z "$REDIS_URL" ]] && fail "Missing REDIS_URL"
+  return 0
 }
 
 write_profile_d() {

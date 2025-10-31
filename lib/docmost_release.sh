@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
-source "../lib/common.sh"
+trap 'echo "[ERROR] $0 failed at line $LINENO: $BASH_COMMAND" >&2' ERR
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/common.sh"
 
 resolve_docmost_version() {
   if [[ -n "$DOCMOST_VERSION" ]]; then
@@ -14,32 +16,32 @@ resolve_docmost_version() {
 }
 
 fetch_and_unpack_docmost() {
-  TARBALL_URL="https://github.com/docmost/docmost/releases/download/$VERSION/docmost-$VERSION.tar.gz"
+  TARBALL_URL="https://github.com/docmost/docmost/archive/refs/tags/$VERSION.tar.gz"
   step "Download" "Fetching $TARBALL_URL"
   mkdir -p "$TMP_DIR"
   curl -sSL "$TARBALL_URL" -o "$TMP_DIR/docmost.tar.gz"
   # TODO: Checksum/signature verification if available
-  tar -xzf "$TMP_DIR/docmost.tar.gz" -C "$BUILD_DIR/app"
+  tar -xzf "$TMP_DIR/docmost.tar.gz" -C "$BUILD_DIR" --strip-components=1
 }
 
 infer_entrypoint() {
   # Search for main.js in plausible locations
   local candidates=(
-    "$BUILD_DIR/app/apps/server/dist/main.js"
-    "$BUILD_DIR/app/packages/server/dist/main.js"
+    "$BUILD_DIR/apps/server/dist/main.js"
+    "$BUILD_DIR/packages/server/dist/main.js"
   )
-  candidates+=( $(find "$BUILD_DIR/app" -type f -path "*/server/*/dist/main.js" -o -path "*/api/*/dist/main.js") )
+  candidates+=( $(find "$BUILD_DIR" -type f -path "*/server/*/dist/main.js" -o -path "*/api/*/dist/main.js") )
   local entrypoint=""
   for f in "${candidates[@]}"; do
     if [[ -f "$f" ]]; then
-      entrypoint="node ${f#$BUILD_DIR/app/}"
+      entrypoint="node ${f#$BUILD_DIR/}"
       break
     fi
   done
   if [[ -z "$entrypoint" ]]; then
     # Try package.json start script
-    if [[ -f "$BUILD_DIR/app/package.json" ]]; then
-      entrypoint=$(jq -r '.scripts.start' "$BUILD_DIR/app/package.json")
+    if [[ -f "$BUILD_DIR/package.json" ]]; then
+      entrypoint=$(jq -r '.scripts.start' "$BUILD_DIR/package.json")
     fi
   fi
   if [[ -z "$entrypoint" && -n "$DOCMOST_WEB_CMD" ]]; then
