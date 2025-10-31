@@ -1,8 +1,20 @@
 #!/usr/bin/env bash
 set -e
-source "../lib/common.sh"
-source "../lib/docmost_release.sh"
-source "../lib/config_render.sh"
+BUILD_DIR="$1"
+CACHE_DIR="$2"
+ENV_DIR="$3"
+source "$(dirname "$0")/../lib/common.sh"
+source "$(dirname "$0")/../lib/docmost_release.sh"
+source "$(dirname "$0")/../lib/config_render.sh"
+
+# Load env vars from ENV_DIR
+if [[ -d "$ENV_DIR" ]]; then
+	for envfile in "$ENV_DIR"/*; do
+		[ -f "$envfile" ] || continue
+		varname=$(basename "$envfile")
+		export "$varname"="$(cat "$envfile")"
+	done
+fi
 
 step "Resolving Docmost version"
 resolve_docmost_version
