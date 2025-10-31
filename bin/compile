@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e
-source "$(dirname "$0")/../lib/common.sh"
-source "$(dirname "$0")/../lib/docmost_release.sh"
-source "$(dirname "$0")/../lib/config_render.sh"
+source "../lib/common.sh"
+source "../lib/docmost_release.sh"
+source "../lib/config_render.sh"
 
 step "Resolving Docmost version"
 resolve_docmost_version

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-source "$(dirname "$0")/../lib/common.sh"
+source "../lib/common.sh"
 
 
 if [[ -n "$DOCMOST_VERSION" ]]; then

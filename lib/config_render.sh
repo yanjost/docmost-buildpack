@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-source "$(dirname "$0")/common.sh"
+source "../lib/common.sh"
 
 configure_storage() {
   if [[ "$STORAGE_DRIVER" == "s3" ]]; then
