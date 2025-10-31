@@ -7,8 +7,8 @@ This repository provides a production-grade Heroku-style buildpack for deploying
 1. **Create your Scalingo app and add-ons:**
    ```sh
    scalingo --region osc-fr1 create my-docmost
-   scalingo --region osc-fr1 addons-add postgresql:postgresql-starter-1024
-   scalingo --region osc-fr1 addons-add redis:redis-starter-512
+   scalingo --region osc-fr1 addons-add postgresql postgresql-starter-1024
+   scalingo --region osc-fr1 addons-add redis redis-starter-512
    ```
 2. **Set required environment variables:**
    ```sh
