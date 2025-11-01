@@ -5,6 +5,11 @@ node_modules/
 /buildpack/.cache/
 /buildpack/.tmp/
 
+# Test fixtures - buildpack-generated files
+/buildpack/test/fixtures/**/.docmost_web_cmd
+/buildpack/test/fixtures/**/.profile.d/
+/buildpack/test/fixtures/**/.slugignore
+
 # Example app
 /example/node_modules/
 /example/.env

@@ -38,12 +38,17 @@ This buildpack automatically creates/appends to `.slugignore` to reduce the fina
 - Build caches
 - Unnecessary mermaid locale files (keeps English only)
 
-The optimizations are automatically added to `.slugignore` with markers:
+The optimizations are automatically added to `.slugignore` with a marker:
 ```
-# >>> DOCMOST BUILDPACK OPTIMIZATIONS >>>
+.git/
+.gitignore
+docs/
+*.md
 ...
-# <<< DOCMOST BUILDPACK OPTIMIZATIONS <<<
+DOCMOST_BUILDPACK_OPTIMIZATIONS
 ```
+
+Note: Unlike `.gitignore`, `.slugignore` doesn't support comments, so the buildpack only includes file patterns.
 
 You can add additional entries to `.slugignore` in your app repository - the buildpack will append its optimizations without duplicating.
 
