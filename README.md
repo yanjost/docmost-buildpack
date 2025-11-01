@@ -31,12 +31,49 @@ This repository provides a production-grade Heroku-style buildpack for deploying
 
 This buildpack automatically creates/appends to `.slugignore` to reduce the final slug size and stay under Scalingo's 1500MB limit.
 
-**What gets removed** (200-400MB reduction):
-- Build-only dependencies (Nx, Vite, TypeScript compiler)
-- Source TypeScript files
-- Test files and documentation
-- Build caches
-- Unnecessary mermaid locale files (keeps English only)
+### How It Works
+
+The buildpack uses a multi-layered optimization approach inspired by Docmost's Docker multi-stage build strategy:
+
+1. **Source Code Removal**: TypeScript source files, src/ directories, and build configs
+2. **Development Tool Removal**: Build tools like Nx, Vite, TypeScript compiler, ESLint, Prettier
+3. **Dev Dependency Removal**: `@types/*`, `@nestjs/cli`, `@nestjs/testing`, and other dev packages
+4. **Build Artifact Cleanup**: Source maps, test files, build caches
+5. **Locale Optimization**: Removes non-English mermaid diagram locales
+
+**Expected reduction**: 200-500MB depending on dependency versions
+
+### What Gets Removed
+
+**Development Tools** (~150-250MB):
+- `node_modules/.pnpm/nx@*/`, `node_modules/.pnpm/@nx+*/`
+- `node_modules/.pnpm/vite@*/`, `node_modules/.pnpm/typescript@*/`
+- `node_modules/.pnpm/eslint@*/`, `node_modules/.pnpm/prettier@*/`
+- `node_modules/.pnpm/@nestjs+cli@*/`, `node_modules/.pnpm/@nestjs+testing@*/`
+- `node_modules/.pnpm/@types+*/` (TypeScript type definitions)
+- `node_modules/.pnpm/@swc+*/`, `node_modules/.pnpm/esbuild@*/`
+
+**Source Files** (~50-100MB):
+- `apps/*/src/`, `packages/*/src/`
+- `*.ts`, `*.tsx` (except `.d.ts` files needed at runtime)
+- `tsconfig.json`, `tsconfig.*.json`
+
+**Build Artifacts** (~50-100MB):
+- `dist/**/*.map`, `apps/*/dist/**/*.map` (source maps)
+- `.nx/`, `dist/.nx/` (Nx build cache)
+- `.cache/`, `node_modules/.cache/`, `node_modules/.vite/`
+
+**Documentation & Config** (~10-20MB):
+- `*.md`, `docs/`, `README*`, `LICENSE*`
+- `.git/`, `.github/`, `.vscode/`
+- `test/`, `tests/`, `**/*.test.js`, `**/*.spec.ts`
+
+**Localization** (~20-30MB):
+- `apps/client/dist/assets/*-[A-Z][A-Z]-*.js` (keeps only `en-*.js`)
+
+### Technical Note: Dependency Pruning
+
+The nodejs-buildpack automatically runs `pnpm prune --prod` after building, which removes devDependencies. However, since Scalingo's `.slugignore` is processed AFTER buildpack completion, we use aggressive patterns to ensure any remaining dev tools are excluded from the final slug.
 
 The optimizations are automatically added to `.slugignore` with a marker:
 ```
