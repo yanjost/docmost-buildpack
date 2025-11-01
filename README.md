@@ -1,6 +1,6 @@
 # Docmost Buildpack for Scalingo
 
-This repository provides a production-grade Heroku-style buildpack for deploying [Docmost](https://github.com/docmost/docmost) on Scalingo. It automates installation, configuration, and deployment, leveraging Scalingo's PostgreSQL and Redis add-ons, with optional S3 storage and SMTP support. The buildpack fetches official Docmost release tarballs, infers the correct entrypoint, and runs post-deploy migrations automatically.
+This repository provides a production-grade Heroku-style buildpack for deploying [Docmost](https://github.com/docmost/docmost) on Scalingo. It automates installation, configuration, and deployment, leveraging Scalingo's PostgreSQL and Redis add-ons, with optional S3 storage and SMTP support. The buildpack fetches official Docmost release tarballs, infers the correct entrypoint, automatically optimizes slug size, and runs post-deploy migrations automatically.
 
 ## Quickstart
 
@@ -26,5 +26,25 @@ This repository provides a production-grade Heroku-style buildpack for deploying
    git push scalingo main
    ```
 4. **Post-deploy migrations run automatically.**
+
+## Slug Size Optimization
+
+This buildpack automatically creates/appends to `.slugignore` to reduce the final slug size and stay under Scalingo's 1500MB limit.
+
+**What gets removed** (200-400MB reduction):
+- Build-only dependencies (Nx, Vite, TypeScript compiler)
+- Source TypeScript files
+- Test files and documentation
+- Build caches
+- Unnecessary mermaid locale files (keeps English only)
+
+The optimizations are automatically added to `.slugignore` with markers:
+```
+# >>> DOCMOST BUILDPACK OPTIMIZATIONS >>>
+...
+# <<< DOCMOST BUILDPACK OPTIMIZATIONS <<<
+```
+
+You can add additional entries to `.slugignore` in your app repository - the buildpack will append its optimizations without duplicating.
 
 See `/docs/` for full installation, configuration, upgrade, and troubleshooting guides.

@@ -8,6 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/common.sh"
 source "$SCRIPT_DIR/../lib/docmost_release.sh"
 source "$SCRIPT_DIR/../lib/config_render.sh"
+source "$SCRIPT_DIR/../lib/slugignore.sh"
 
 # Load env vars from ENV_DIR
 if [[ -d "$ENV_DIR" ]]; then
@@ -35,5 +36,8 @@ configure_db_and_redis
 
 step "Writing profile.d/10-docmost.sh"
 write_profile_d
+
+step "Configuring .slugignore for size optimization"
+write_slugignore
 
 step "Compile finished"
