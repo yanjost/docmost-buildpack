@@ -68,8 +68,14 @@ The buildpack uses a multi-layered optimization approach inspired by Docmost's D
 - `.git/`, `.github/`, `.vscode/`
 - `test/`, `tests/`, `**/*.test.js`, `**/*.spec.ts`
 
-**Localization** (~20-30MB):
-- `apps/client/dist/assets/*-[A-Z][A-Z]-*.js` (keeps only `en-*.js`)
+**Localization** (~20-40MB):
+- Removes non-English locale files from `apps/client/dist/assets/` (ar, de, es, fr, it, ja, ko, pl, pt, ru, zh, nl, sv, tr, cs, da, fi, nb, uk)
+- Keeps only English (`en-*.js`) locale files
+
+**Additional Optimizations**:
+- `pnpm-lock.yaml`, `nx.json`, `crowdin.yml` (build metadata, ~1MB)
+- `patches/` directory (pnpm patches, may not be needed at runtime)
+- `node_modules/.modules.yaml` (pnpm metadata)
 
 ### Technical Note: Dependency Pruning
 
