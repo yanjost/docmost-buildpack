@@ -95,4 +95,43 @@ Note: Unlike `.gitignore`, `.slugignore` doesn't support comments, so the buildp
 
 You can add additional entries to `.slugignore` in your app repository - the buildpack will append its optimizations without duplicating.
 
+## Debugging Slug Size Issues
+
+If your deployment still exceeds the 1500MB limit, enable detailed size analysis:
+
+```sh
+scalingo --region osc-fr1 env-set DOCMOST_DEBUG_SIZE=true
+git push scalingo main
+```
+
+This will output a comprehensive breakdown during build:
+- Total build directory size
+- Top 20 largest directories
+- node_modules breakdown by package
+- .pnpm virtual store analysis
+- Detection of files that should have been removed
+- TypeScript source file count
+- Source map analysis
+- Current .slugignore content
+
+The analysis helps identify:
+- Which packages are taking the most space
+- Whether dev dependencies were properly pruned
+- If source files are still present
+- What .slugignore patterns are actually working
+
+**Example output:**
+```
+>>> Top 20 largest packages in node_modules:
+245M    node_modules/@aws-sdk
+189M    node_modules/@nestjs
+156M    node_modules/.pnpm
+...
+```
+
+After identifying the issue, disable the debug mode:
+```sh
+scalingo --region osc-fr1 env-unset DOCMOST_DEBUG_SIZE
+```
+
 See `/docs/` for full installation, configuration, upgrade, and troubleshooting guides.

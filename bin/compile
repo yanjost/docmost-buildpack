@@ -9,6 +9,7 @@ source "$SCRIPT_DIR/../lib/common.sh"
 source "$SCRIPT_DIR/../lib/docmost_release.sh"
 source "$SCRIPT_DIR/../lib/config_render.sh"
 source "$SCRIPT_DIR/../lib/slugignore.sh"
+source "$SCRIPT_DIR/../lib/size_analysis.sh"
 
 # Load env vars from ENV_DIR
 if [[ -d "$ENV_DIR" ]]; then
@@ -39,5 +40,8 @@ write_profile_d
 
 step "Configuring .slugignore for size optimization"
 write_slugignore
+
+step "Size Analysis" "Running size analysis (set DOCMOST_DEBUG_SIZE=true for details)"
+analyze_slug_size
 
 step "Compile finished"
