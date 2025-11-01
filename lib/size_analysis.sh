@@ -4,6 +4,17 @@ trap 'echo "[ERROR] $0 failed at line $LINENO: $BASH_COMMAND" >&2' ERR
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common.sh"
 
+# NOTE: This size analysis runs BEFORE the nodejs-buildpack builds the application.
+# At this point, we only see the source code that was downloaded by this buildpack.
+#
+# To analyze the FINAL slug size (after build and before .slugignore processing),
+# you would need to add this buildpack TWICE in .buildpacks:
+#   1. https://github.com/yanjost/docmost-buildpack  (downloads source, configures)
+#   2. https://github.com/Scalingo/nodejs-buildpack   (builds with pnpm)
+#   3. https://github.com/yanjost/docmost-buildpack  (analyzes final size)
+#
+# However, the current approach still works for verifying what was downloaded.
+
 analyze_slug_size() {
   local build_dir="${1:-$BUILD_DIR}"
 
@@ -13,6 +24,7 @@ analyze_slug_size() {
   fi
 
   step "Size Analysis" "Starting detailed size analysis (DOCMOST_DEBUG_SIZE=true)"
+  step "Size Analysis" "NOTE: Running before nodejs-buildpack build - showing source size only"
 
   echo ""
   echo "========================================"

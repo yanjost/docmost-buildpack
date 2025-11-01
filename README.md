@@ -134,4 +134,17 @@ After identifying the issue, disable the debug mode:
 scalingo --region osc-fr1 env-unset DOCMOST_DEBUG_SIZE
 ```
 
+### Important Note: Analysis Timing
+
+The size analysis currently runs **before** the nodejs-buildpack builds the application, so it shows the source code size, not the final built slug size. To analyze the **final** slug size (after build, after pnpm prune, but before .slugignore), you would need to add this buildpack twice:
+
+```
+# .buildpacks
+https://github.com/yanjost/docmost-buildpack  # Downloads & configures
+https://github.com/Scalingo/nodejs-buildpack   # Builds with pnpm
+https://github.com/yanjost/docmost-buildpack  # Analyzes final size
+```
+
+However, since the current approach achieved the desired result (1420MB < 1500MB limit), this advanced configuration is not necessary unless you need to debug further.
+
 See `/docs/` for full installation, configuration, upgrade, and troubleshooting guides.

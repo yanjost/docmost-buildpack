@@ -75,3 +75,16 @@ After debugging:
 ```sh
 scalingo --region osc-fr1 env-unset DOCMOST_DEBUG_SIZE
 ```
+
+### Advanced: Analyzing Post-Build Size
+
+**Note**: The current size analysis runs **before** the nodejs-buildpack builds the application, so it only shows source code size. To analyze the size **after** the build completes (but before .slugignore processing), you can add the buildpack twice:
+
+```
+# .buildpacks
+https://github.com/yanjost/docmost-buildpack  # 1. Downloads & configures
+https://github.com/Scalingo/nodejs-buildpack   # 2. Builds with pnpm
+https://github.com/yanjost/docmost-buildpack  # 3. Analyzes final size
+```
+
+This advanced setup is only needed if you want to see exactly what's in node_modules after pnpm prune but before .slugignore removes files. Since the current optimizations achieved 1420MB (under the 1500MB limit), this is typically not necessary.
