@@ -24,6 +24,15 @@ fetch_and_unpack_docmost() {
   tar -xzf "$TMP_DIR/docmost.tar.gz" -C "$BUILD_DIR" --strip-components=1
 }
 
+# Docmost does not declare engines.node, so the nodejs buildpack falls back to the
+# current LTS. Newer releases (v0.96+) target Node 26: DOCMOST_NODE_VERSION pins it.
+pin_node_engine() {
+  [[ -z "$DOCMOST_NODE_VERSION" ]] && return 0
+  local pkg="$BUILD_DIR/package.json"
+  jq --arg v "$DOCMOST_NODE_VERSION" '.engines.node = $v' "$pkg" > "$pkg.tmp" && mv "$pkg.tmp" "$pkg"
+  step "Node" "Pinned engines.node=$DOCMOST_NODE_VERSION"
+}
+
 infer_entrypoint() {
   # Search for main.js in plausible locations
   local candidates=(

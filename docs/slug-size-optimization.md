@@ -19,7 +19,7 @@ The buildpack uses a multi-layered optimization approach inspired by Docmost's D
 ### Development Tools (~150-250MB)
 - `node_modules/.pnpm/nx@*/`, `node_modules/.pnpm/@nx+*/`
 - `node_modules/.pnpm/vite@*/`, `node_modules/.pnpm/typescript@*/`
-- `node_modules/.pnpm/eslint@*/`, `node_modules/.pnpm/prettier@*/`
+- `node_modules/.pnpm/eslint@*/`
 - `node_modules/.pnpm/@nestjs+cli@*/`, `node_modules/.pnpm/@nestjs+testing@*/`
 - `node_modules/.pnpm/@types+*/` (TypeScript type definitions)
 - `node_modules/.pnpm/@swc+*/`, `node_modules/.pnpm/esbuild@*/`
