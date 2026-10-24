@@ -106,6 +106,7 @@ These variables control the buildpack behavior:
 | Variable | Description | Default | Example |
 |----------|-------------|---------|---------|
 | `DOCMOST_VERSION` | Docmost version to deploy | Latest stable | `v0.23.2` |
+| `DOCMOST_NODE_VERSION` | Pin `engines.node` (semver range) when Docmost declares none | Current LTS | `26.x` |
 | `DOCMOST_WEB_CMD` | Override web process command | Auto-detected | `pnpm --filter ./apps/server run start:prod` |
 | `DOCMOST_DEBUG_SIZE` | Enable size analysis during build | `false` | `true` |
 

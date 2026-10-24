@@ -26,6 +26,9 @@ resolve_docmost_version
 step "Fetching Docmost release tarball"
 fetch_and_unpack_docmost
 
+step "Pinning Node.js version"
+pin_node_engine
+
 step "Inferring entrypoint"
 infer_entrypoint
 
