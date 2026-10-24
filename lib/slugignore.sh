@@ -54,8 +54,6 @@ node_modules/.pnpm/@eslint+*/
 node_modules/@eslint/
 node_modules/.pnpm/eslint@*/
 node_modules/eslint/
-node_modules/.pnpm/prettier@*/
-node_modules/prettier/
 node_modules/.pnpm/@swc+*/
 node_modules/@swc/
 node_modules/.pnpm/esbuild@*/
